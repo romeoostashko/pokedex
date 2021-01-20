@@ -1,0 +1,24 @@
+.PokemonsList .Arr {
+  margin: 50px;
+}
+.PokemonsList {
+  margin-top: 20px;
+}
+
+.Arr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.NumberPokemonsList p {
+  display: inline;
+  margin: 10px;
+}
+
+.Navigation span {
+  margin: 10px;
+}
+
+.Navigation {
+  margin: 20px auto;
+}
