@@ -73,8 +73,11 @@ class PokemonsList extends Component {
   }
 
   selectHandler = (e) => {
-    this.setState({ numberPokemonsList: +e.target.value });
-    this.setState({ selected: true });
+    this.setState({
+      numberPokemonsList: +e.target.value,
+      tag: null,
+      selected: true,
+    });
   };
 
   inputHandler = (e) => {
@@ -84,16 +87,18 @@ class PokemonsList extends Component {
         searched: true,
       });
     }
-    let arr = [];
-    arr = this.state.arrPokemons.filter((pokemon) => {
-      return pokemon.name.startsWith(e.target.value);
+    let arr = [...this.state.arrPokemons];
+    arr = arr.filter((pokemon) => {
+      return pokemon.name.includes(e.target.value);
     });
     this.setState({ arrPokemons: arr });
 
     if (e.target.value === "" || e.target.value === " " || arr.length === 0) {
       this.setState({
-        arrPokemons: [...this.state.arrSearchPokemon],
         searched: false,
+        selected: true,
+        arrTags: [],
+        tag: null,
       });
     }
   };
@@ -103,7 +108,7 @@ class PokemonsList extends Component {
     obj.value = value.map((iteam) => iteam.type.name);
     let arrTags = [...this.state.arrTags];
     arrTags.push(obj);
-    this.setState({ arrTags: arrTags });
+    this.setState({ arrTags });
   };
 
   searchTagHandler = (e) => {
@@ -133,12 +138,14 @@ class PokemonsList extends Component {
       this.setState({
         url: this.state.nextUrl,
         offset: this.state.offset + this.state.numberPokemonsList,
+        tag: null,
       });
     }
     if (direction === "PREV" && this.state.previousUrl) {
       this.setState({
         url: this.state.previousUrl,
         offset: this.state.offset - this.state.numberPokemonsList,
+        tag: null,
       });
     }
   };
