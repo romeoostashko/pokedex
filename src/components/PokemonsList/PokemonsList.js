@@ -89,7 +89,7 @@ class PokemonsList extends Component {
     }
     let arr = [...this.state.arrPokemons];
     arr = arr.filter((pokemon) => {
-      return pokemon.name.includes(e.target.value);
+      return pokemon.name.startsWith(e.target.value);
     });
     this.setState({ arrPokemons: arr });
 
@@ -139,6 +139,7 @@ class PokemonsList extends Component {
         url: this.state.nextUrl,
         offset: this.state.offset + this.state.numberPokemonsList,
         tag: null,
+        arrTags: [],
       });
     }
     if (direction === "PREV" && this.state.previousUrl) {
@@ -146,6 +147,7 @@ class PokemonsList extends Component {
         url: this.state.previousUrl,
         offset: this.state.offset - this.state.numberPokemonsList,
         tag: null,
+        arrTags: [],
       });
     }
   };

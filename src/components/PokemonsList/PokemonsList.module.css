@@ -7,7 +7,7 @@
 
 .Arr {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .PokemonsList .Tag {
@@ -32,4 +32,28 @@
   top: -2px;
   left: 6px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 1300px) {
+  .Arr {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .Arr {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .Arr {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Arr {
+    grid-template-columns: 1fr;
+  }
 }
