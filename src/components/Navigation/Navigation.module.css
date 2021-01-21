@@ -1,0 +1,13 @@
+.NumberPokemonsList p {
+  display: inline;
+  margin: 10px;
+}
+
+.Navigation span {
+  margin: 10px;
+  cursor: pointer;
+}
+
+.Navigation {
+  margin: 20px auto;
+}

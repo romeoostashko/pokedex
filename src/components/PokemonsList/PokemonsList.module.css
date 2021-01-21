@@ -10,15 +10,26 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.NumberPokemonsList p {
-  display: inline;
-  margin: 10px;
+.PokemonsList .Tag {
+  height: 20px;
 }
 
-.Navigation span {
-  margin: 10px;
+.PokemonsList .Tag {
+  background-color: rgb(155, 34, 34);
+  color: rgb(229, 230, 231);
+  margin: 0 auto;
+  width: 90px;
+  margin-top: 20px;
+}
+.PokemonsList .Tag span {
+  position: relative;
+  top: -2px;
 }
 
-.Navigation {
-  margin: 20px auto;
+.PokemonsList .Tag span::after {
+  content: "x";
+  position: relative;
+  top: -2px;
+  left: 6px;
+  cursor: pointer;
 }
