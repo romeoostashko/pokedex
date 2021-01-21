@@ -1,13 +1,19 @@
 .NumberPokemonsList p {
   display: inline;
   margin: 10px;
+  caret-color: transparent;
 }
 
 .Navigation span {
   margin: 10px;
   cursor: pointer;
+  caret-color: transparent;
 }
 
 .Navigation {
   margin: 20px auto;
+}
+
+.Navigation span:hover {
+  color: rgb(230, 59, 59);
 }
