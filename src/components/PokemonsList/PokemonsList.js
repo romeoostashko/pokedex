@@ -85,7 +85,7 @@ class PokemonsList extends Component {
         <Search search={(e) => this.searchInputHandler(e)} />
         <div className={classes.Found}>
           {this.props.isClickTag || this.state.searched ? (
-            <p>
+            <p style={{ color: "#acacac" }}>
               Found {this.props.result} pokemons.{" "}
               {this.props.result > this.props.limit
                 ? "Use the button 'NEXT'"
