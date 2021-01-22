@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as actionTypes from "../../store/actions";
 import axios from "axios";
 import Pokemon from "../Pokemon/Pokemon";
 import classes from "./PokemonsList.module.css";
@@ -7,148 +9,43 @@ import Search from "../Search/Search";
 
 class PokemonsList extends Component {
   state = {
-    arrPokemons: [],
-    arrSearchPokemon: [],
-    numberPokemonsList: 10,
     arrTags: [],
-    offset: 0,
     error: false,
     selected: false,
-    nextUrl: null,
-    previousUrl: null,
-    url: null,
     searched: false,
     tag: null,
   };
 
   componentDidMount() {
     axios
-      .get(
-        `https://pokeapi.co/api/v2/pokemon?limit=${this.state.numberPokemonsList}&offset=${this.state.offset}`
-      )
+      .get(`https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0`)
       .then((respons) => {
-        this.setState({
-          arrPokemons: respons.data.results,
-          nextUrl: respons.data.next,
-          previousUrl: respons.data.previous,
-        });
-      })
-      .catch((error) => {
-        this.setState({ error: true });
+        this.props.OnAxios(respons.data);
       });
   }
-  axiosUpdate = () => {
-    axios
-      .get(
-        !this.state.url
-          ? `https://pokeapi.co/api/v2/pokemon?limit=
-    ${this.state.numberPokemonsList}&offset=
-    ${this.state.offset}`
-          : this.state.url
-      )
-      .then((respons) => {
-        if (this.state.selected) {
-          this.setState({
-            arrPokemons: respons.data.results,
-            nextUrl: respons.data.next,
-            previousUrl: respons.data.previous,
-            selected: false,
-          });
-        }
-        if (this.state.url) {
-          this.setState({
-            arrPokemons: respons.data.results,
-            nextUrl: respons.data.next,
-            previousUrl: respons.data.previous,
-            url: null,
-          });
-        }
-      })
-      .catch((error) => {
-        this.setState({ error: true });
-      });
-  };
-  componentDidUpdate() {
-    this.axiosUpdate();
-  }
 
-  selectHandler = (e) => {
-    this.setState({
-      numberPokemonsList: +e.target.value,
-      tag: null,
-      selected: true,
-    });
-  };
-
-  inputHandler = (e) => {
-    if (!this.state.searched) {
-      this.setState({
-        arrSearchPokemon: [...this.state.arrPokemons],
-        searched: true,
-      });
-    }
-    let arr = [...this.state.arrPokemons];
+  searchInputHandler = (e) => {
+    this.props.OnSearch(e);
+    let arr = [...this.props.arrPokemons];
     arr = arr.filter((pokemon) => {
       return pokemon.name.startsWith(e.target.value);
     });
-    this.setState({ arrPokemons: arr });
 
-    if (e.target.value === "" || e.target.value === " " || arr.length === 0) {
-      this.setState({
-        searched: false,
-        selected: true,
-        arrTags: [],
-        tag: null,
-      });
-    }
-  };
-
-  updateData = (value, name, url) => {
-    let obj = { name, url };
-    obj.value = value.map((iteam) => iteam.type.name);
-    let arrTags = [...this.state.arrTags];
-    arrTags.push(obj);
-    this.setState({ arrTags });
-  };
-
-  searchTagHandler = (e) => {
-    let arr = [...this.state.arrTags];
-    let arrFiltred = arr.filter((it) => {
-      return (
-        it.value.includes(e.target.innerText.toLowerCase()) ||
-        it.value.includes(e.target.innerText.toLowerCase())
-      );
-    });
-    this.setState({
-      arrPokemons: arrFiltred,
-      tag: <span>{e.target.innerText}</span>,
-    });
-  };
-
-  deleteTagHandler = () => {
-    this.setState({
-      tag: null,
-      selected: true,
-      arrTags: [],
-    });
-  };
-
-  navigationHandler = (direction) => {
-    if (direction === "NEXT" && this.state.nextUrl) {
-      this.setState({
-        url: this.state.nextUrl,
-        offset: this.state.offset + this.state.numberPokemonsList,
-        tag: null,
-        arrTags: [],
-      });
-    }
-    if (direction === "PREV" && this.state.previousUrl) {
-      this.setState({
-        url: this.state.previousUrl,
-        offset: this.state.offset - this.state.numberPokemonsList,
-        tag: null,
-        arrTags: [],
-      });
+    if (arr.length > 0 && e.target.value) {
+      if (arr.length > this.props.limit) {
+        arr = arr.splice(0, this.props.limit);
+      }
+      const newArr = arr.map((pokemon, id) => (
+        <Pokemon
+          key={pokemon.name + id}
+          url={pokemon.url}
+          name={pokemon.name}
+        />
+      ));
+      this.props.SearchArray(newArr);
+      this.setState({ searched: true });
+    } else {
+      this.setState({ searched: false });
     }
   };
 
@@ -159,14 +56,14 @@ class PokemonsList extends Component {
     };
 
     let arr = "Loading...";
-    if (this.state.arrPokemons) {
-      arr = this.state.arrPokemons.map((pokemon, id) => (
+    if (this.props.arrPokemons.length > 0) {
+      arr = this.props.arrPokemons;
+      arr = arr.slice(this.props.begin, this.props.begin + this.props.limit);
+      arr = arr.map((pokemon, id) => (
         <Pokemon
-          updateData={this.updateData}
-          clickTags={this.searchTagHandler}
-          name={pokemon.name}
           key={pokemon.name + id}
           url={pokemon.url}
+          name={pokemon.name}
         />
       ));
     }
@@ -174,25 +71,44 @@ class PokemonsList extends Component {
     return (
       <div className={classes.PokemonsList}>
         <Navigation
-          stylePrev={!this.state.previousUrl ? style : null}
-          styleNext={
-            this.state.previousUrl || !this.state.NextUrl ? null : style
-          }
-          click={this.selectHandler}
-          prev={this.navigationHandler.bind(this, "PREV")}
-          next={this.navigationHandler.bind(this, "NEXT")}
+          stylePrev={!this.props.begin ? style : null}
+          styleNext={this.props.end < 1118 ? null : style}
+          click={(e) => this.props.OnSelect(e)}
+          prev={this.props.OnNavigationPrev}
+          next={this.props.OnNavigationNext}
         />
-        <Search search={this.inputHandler} />
-        <div
-          onClick={this.deleteTagHandler}
-          className={this.state.tag ? classes.Tag : null}
-        >
-          {this.state.tag}
+        <Search search={(e) => this.searchInputHandler(e)} />
+        <div className={classes.Arr}>
+          {this.state.searched ? this.props.newArr : arr}
         </div>
-        <div className={classes.Arr}>{arr}</div>
       </div>
     );
   }
 }
+//-----------------------------------------------------
+const mapStateToProps = (state) => {
+  return {
+    arrPokemons: state.arrPokemons,
+    nextUrl: state.nextUrl,
+    previousUrl: state.previousUrl,
+    limit: state.limit,
+    begin: state.begin,
+    end: state.end,
+    input: state.input,
+    searched: state.searched,
+    newArr: state.newArr,
+  };
+};
+//-----------------------------------------------------
+const mapDispatchToProps = (dispatch) => {
+  return {
+    OnAxios: (resp) => dispatch({ type: actionTypes.AXIOS, resp }),
+    OnSelect: (e) => dispatch({ type: actionTypes.SELECT, e }),
+    OnNavigationNext: () => dispatch({ type: actionTypes.NAVNEXT }),
+    OnNavigationPrev: () => dispatch({ type: actionTypes.NAVPREV }),
+    OnSearch: (e) => dispatch({ type: actionTypes.SEARCH, e }),
+    SearchArray: (arr) => dispatch({ type: actionTypes.SEARCHARRAY, arr }),
+  };
+};
 
-export default PokemonsList;
+export default connect(mapStateToProps, mapDispatchToProps)(PokemonsList);
