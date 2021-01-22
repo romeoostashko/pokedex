@@ -11,6 +11,7 @@ const initialState = {
   count: 0,
   tagArr: [],
   isClickTag: false,
+  result: 0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -39,16 +40,11 @@ const reducer = (state = initialState, action) => {
         begin: state.begin - state.limit,
       };
 
-    case actionTypes.SEARCH:
-      return {
-        ...state,
-        input: action.e.target.value,
-      };
-
     case actionTypes.SEARCHARRAY:
       return {
         ...state,
         newArr: [...action.arr],
+        result: action.arr.length,
       };
 
     case actionTypes.DEFAULTBEGIN:
@@ -62,6 +58,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         begin: state.oldBegin,
+        result: 0,
       };
 
     case actionTypes.TAGARR:
@@ -70,12 +67,14 @@ const reducer = (state = initialState, action) => {
         tagArr: [...action.data],
         tag: action.tag,
         isClickTag: true,
+        result: action.data.length,
       };
 
     case actionTypes.DELETETAG:
       return {
         ...state,
         isClickTag: false,
+        result: 0,
         tag: "",
       };
 

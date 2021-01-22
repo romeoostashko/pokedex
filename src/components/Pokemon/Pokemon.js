@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import * as actionTypes from "../../store/actions";
 import classes from "./Pokemon.module.css";
 import axios from "axios";
 
@@ -16,16 +14,6 @@ class PokemonLayout extends Component {
         img: response.data.sprites.front_default,
         tags: response.data.types,
       });
-
-      /*let tags = this.state.tags.map((iteam, idx) =>
-        iteam.type.name.toUpperCase()
-      );
-
-      this.props.TagArr({
-        tags: tags,
-        name: response.data.name,
-        url: this.props.url,
-      });*/
     });
   }
 
@@ -50,15 +38,5 @@ class PokemonLayout extends Component {
     );
   }
 }
-// ------------------------------------
-const mapStateToProps = (state) => {
-  return {
-    tagArr: state.TagArr,
-  };
-};
-//------------------------------------
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(PokemonLayout);
+export default PokemonLayout;

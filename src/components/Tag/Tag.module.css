@@ -3,7 +3,7 @@
   color: rgb(229, 230, 231);
   margin: 0 auto;
   width: 90px;
-  margin-top: 20px;
+  margin-top: 17px;
 }
 .Tag span {
   position: relative;
@@ -19,5 +19,5 @@
 }
 .TagInvisible {
   margin: 0 auto;
-  height: 41.6px;
+  height: 33.6px;
 }

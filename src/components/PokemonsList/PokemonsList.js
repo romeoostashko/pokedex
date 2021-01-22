@@ -11,11 +11,8 @@ import Tag from "../Tag/Tag";
 class PokemonsList extends Component {
   state = {
     error: false,
-    isClickTag: false,
     searched: false,
-    tag: null,
     count: 0,
-    disabled: false,
   };
 
   componentDidMount() {
@@ -27,10 +24,11 @@ class PokemonsList extends Component {
   }
   //--- Search input---
   searchInputHandler = (e) => {
-    this.props.OnSearch(e);
-    let arr = [...this.props.arrPokemons];
+    let arr = this.props.isClickTag
+      ? [...this.props.tagArr]
+      : [...this.props.arrPokemons];
     arr = arr.filter((pokemon) => {
-      return pokemon.name.startsWith(e.target.value);
+      return pokemon.name.startsWith(e.target.value.toLowerCase());
     });
     if (arr.length > 0 && e.target.value) {
       this.setState({ count: this.state.count + 1 });
@@ -58,11 +56,6 @@ class PokemonsList extends Component {
   };
 
   render() {
-    const style = {
-      color: "#ccc",
-      cursor: "default",
-    };
-
     let arr = "Loading...";
     if (this.props.arrPokemons.length > 0) {
       console.log(this.props.tagArr);
@@ -71,6 +64,7 @@ class PokemonsList extends Component {
         : this.props.isClickTag
         ? this.props.tagArr
         : this.props.arrPokemons;
+
       arr = arr.slice(this.props.begin, this.props.begin + this.props.limit);
       arr = arr.map((pokemon, id) => (
         <Pokemon
@@ -87,14 +81,16 @@ class PokemonsList extends Component {
         <Navigation
           disabledNext={arr.length < this.props.limit ? true : false}
           disabledPrev={this.props.begin ? false : true}
-          stylePrev={!this.props.begin ? style : null}
-          click={(e) => this.props.OnSelect(e)}
-          prev={this.props.OnNavigationPrev}
-          next={this.props.OnNavigationNext}
         />
         <Search search={(e) => this.searchInputHandler(e)} />
+        <div className={classes.Found}>
+          {this.props.isClickTag || this.state.searched ? (
+            <p>Found {this.props.result} pokemons</p>
+          ) : (
+            " "
+          )}
+        </div>
         <Tag />
-
         <div className={classes.Arr}>{arr}</div>
       </div>
     );
@@ -104,33 +100,24 @@ class PokemonsList extends Component {
 const mapStateToProps = (state) => {
   return {
     arrPokemons: state.arrPokemons,
-    nextUrl: state.nextUrl,
-    previousUrl: state.previousUrl,
     limit: state.limit,
     begin: state.begin,
     oldBegin: state.oldBegin,
-    end: state.end,
-    input: state.input,
     searched: state.searched,
     newArr: state.newArr,
     tagArr: state.tagArr,
-    tag: state.tag,
     isClickTag: state.isClickTag,
+    result: state.result,
   };
 };
 //-----------------------------------------------------
 const mapDispatchToProps = (dispatch) => {
   return {
     OnAxios: (resp) => dispatch({ type: actionTypes.AXIOS, resp }),
-    OnSelect: (e) => dispatch({ type: actionTypes.SELECT, e }),
-    OnNavigationNext: () => dispatch({ type: actionTypes.NAVNEXT }),
-    OnNavigationPrev: () => dispatch({ type: actionTypes.NAVPREV }),
-    OnSearch: (e) => dispatch({ type: actionTypes.SEARCH, e }),
     SearchArray: (arr) => dispatch({ type: actionTypes.SEARCHARRAY, arr }),
     Defaultbegin: () => dispatch({ type: actionTypes.DEFAULTBEGIN }),
     OldBegin: () => dispatch({ type: actionTypes.OLDBEGIN }),
     TagArr: (data, tag) => dispatch({ type: actionTypes.TAGARR, data, tag }),
-    DeleteTag: (e) => dispatch({ type: actionTypes.DELETETAG, e }),
   };
 };
 
