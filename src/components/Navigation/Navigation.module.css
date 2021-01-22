@@ -4,8 +4,9 @@
   caret-color: transparent;
 }
 
-.Navigation span {
-  margin: 10px;
+.Navigation button {
+  width: 80px;
+  margin: 5px;
   cursor: pointer;
   caret-color: transparent;
 }
@@ -14,6 +15,7 @@
   margin: 20px auto;
 }
 
-.Navigation span:hover {
+.Navigation button:hover {
   color: rgb(230, 59, 59);
+  box-shadow: 1px 3px 3px #ccc;
 }

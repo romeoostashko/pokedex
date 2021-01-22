@@ -132,24 +132,7 @@ class PokemonsList extends Component {
     });
   };*/
 
-  /* navigationHandler = (direction) => {
-    if (direction === "NEXT" && this.state.nextUrl) {
-      this.setState({
-        url: this.state.nextUrl,
-        offset: this.state.offset + this.state.numberPokemonsList,
-        tag: null,
-        arrTags: [],
-      });
-    }
-    if (direction === "PREV" && this.state.previousUrl) {
-      this.setState({
-        url: this.state.previousUrl,
-        offset: this.state.offset - this.state.numberPokemonsList,
-        tag: null,
-        arrTags: [],
-      });
-    }
-  };*/
+  
 
   render() {
     const style = {

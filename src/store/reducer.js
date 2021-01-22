@@ -1,14 +1,16 @@
 import * as actionTypes from "./actions";
 const initialState = {
   arrPokemons: [],
-  nextUrl: "",
-  previousUrl: "",
   limit: 10,
   begin: 0,
+  oldBegin: 0,
   beginSearch: 0,
   searched: false,
   newArr: [],
   end: 10,
+  count: 0,
+  tagArr: [],
+  isClickTag: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,7 +19,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         arrPokemons: [...action.resp.results],
-        previousUrl: action.resp.previous,
       };
 
     case actionTypes.SELECT:
@@ -37,18 +38,47 @@ const reducer = (state = initialState, action) => {
         ...state,
         begin: state.begin - state.limit,
       };
+
     case actionTypes.SEARCH:
-      console.log(action.e.target.value);
       return {
         ...state,
         input: action.e.target.value,
       };
+
     case actionTypes.SEARCHARRAY:
-      console.log(action.arr);
       return {
         ...state,
-        newArr: [action.arr],
+        newArr: [...action.arr],
       };
+
+    case actionTypes.DEFAULTBEGIN:
+      return {
+        ...state,
+        oldBegin: state.begin,
+        begin: 0,
+      };
+
+    case actionTypes.OLDBEGIN:
+      return {
+        ...state,
+        begin: state.oldBegin,
+      };
+
+    case actionTypes.TAGARR:
+      return {
+        ...state,
+        tagArr: [...action.data],
+        tag: action.tag,
+        isClickTag: true,
+      };
+
+    case actionTypes.DELETETAG:
+      return {
+        ...state,
+        isClickTag: false,
+        tag: "",
+      };
+
     default:
       break;
   }
